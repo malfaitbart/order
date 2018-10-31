@@ -7,6 +7,7 @@ namespace Order.Services.Interfaces
 {
 	public interface IUserService
 	{
+		List<User> GetAll();
 		void AddUser(User user);
 	}
 }

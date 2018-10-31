@@ -13,5 +13,10 @@ namespace Order.Services
 		{
 			Database.Users.Add(user);
 		}
+
+		public List<User> GetAll()
+		{
+			return Database.Users;
+		}
 	}
 }

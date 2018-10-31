@@ -18,7 +18,7 @@ namespace Order.Domain.Users
 		public int RoleID { get; private set; }
 		public int Status { get; private set; }
 
-		private int CreateID;
+		private static int CreateID;
 
 		public User(string firstName, string lastName, string email, string phoneNumber, string street, string number, string postalCode, string city)
 		{

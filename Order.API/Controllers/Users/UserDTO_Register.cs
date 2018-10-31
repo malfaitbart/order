@@ -1,6 +1,6 @@
 ﻿namespace Order.API.Controllers.Users
 {
-	public class UserDTO
+	public class UserDTO_Register
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }

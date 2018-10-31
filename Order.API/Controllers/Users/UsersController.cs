@@ -23,8 +23,14 @@ namespace Order.API.Controllers.Users
 			this.userMapper = userMapper;
 		}
 
+		[HttpGet]
+		public ActionResult<List<UserDTO_GetAll>> GetAll()
+		{
+			return userMapper.UserListToUserDTO_GetAllList(userService.GetAll());
+		}
+
 		[HttpPost]
-		public ActionResult<User> AddCustomer([FromBody]UserDTO userToRegister)
+		public ActionResult<User> AddCustomer([FromBody]UserDTO_Register userToRegister)
 		{
 			try
 			{

@@ -13,7 +13,18 @@ namespace Order.Services.Tests
 	public class UserServiceTest
 	{
 		[Fact]
-		public void GivenAUserDataSetAndAUser_WhenAddUser_ThenUserIsAddedToDataSet()
+		public void GivenAUserDatabase_WhenGetAll_ThenGetAListOfUsers()
+		{
+			//Given
+			UserService userService = new UserService();
+			//When
+			var actual = userService.GetAll();
+			//Then
+			Assert.IsType<List<User>>(actual);
+		}
+
+		[Fact]
+		public void GivenAUserDataBaseAndAUser_WhenAddUser_ThenUserIsAddedToDataSet()
 		{
 			//Given
 			UserService userService = new UserService();
