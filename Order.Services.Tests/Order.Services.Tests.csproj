@@ -12,4 +12,9 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Order.Data\Order.Data.csproj" />
+    <ProjectReference Include="..\Order.Services\Order.Services.csproj" />
+  </ItemGroup>
+
 </Project>

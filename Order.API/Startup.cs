@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.API.Controllers.Users;
+using Order.Data;
+using Order.Services;
+using Order.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Order.API
@@ -20,6 +24,9 @@ namespace Order.API
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			services.AddSingleton<IUserService, UserService>();
+
+			services.AddSingleton<UserMapper>();
 
 			services.AddSwaggerGen(c =>
 			{
