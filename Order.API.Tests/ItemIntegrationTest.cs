@@ -1,22 +1,24 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
-using Order.API.Controllers.Users;
-using Order.Domain.Users;
+using Order.API.Controllers.Items;
+using Order.Domain.Items;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+
 namespace Order.API.Tests
 {
-	public class UserIntegrationTest
+	public class ItemIntegrationTest
 	{
 		private readonly TestServer _server;
 		private readonly HttpClient _client;
 
-		public UserIntegrationTest()
+		public ItemIntegrationTest()
 		{
 			_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
 			_client = _server.CreateClient();
@@ -25,14 +27,14 @@ namespace Order.API.Tests
 				new MediaTypeWithQualityHeaderValue("application/json"));
 		}
 		[Fact]
-		public async Task GivenAnAPI_WhenCallingAllUsers_ThenGetListOfUsers()
+		public async Task GivenAnAPI_WhenCallingAllItems_ThenGetListOfItems()
 		{
 			//Given
 
 			//When
-			var response = await _client.GetAsync("/api/users");
+			var response = await _client.GetAsync("/api/items");
 			var responseString = await response.Content.ReadAsStringAsync();
-			var users = JsonConvert.DeserializeObject<List<UserDTO>>(responseString);
+			var users = JsonConvert.DeserializeObject<List<ItemDTO>>(responseString);
 
 			//Then
 			Assert.True(response.IsSuccessStatusCode);
@@ -40,46 +42,47 @@ namespace Order.API.Tests
 		}
 
 		[Fact]
-		public async Task GivenAnAPI_WhenPostingUserData_ThenUserIsCreatedOnBackendAsync()
+		public async Task GivenAnAPI_WhenPostingItemData_ThenItemIsCreatedOnBackendAsync()
 		{
 			//Given
-			var user = new User("test", "test", "test@test.com", "test", "test", "test", "teste", "teste");
+			var item = new Item("test", "test", 0.0, 0);
 
 			//When
-			var content = JsonConvert.SerializeObject(user);
+			var content = JsonConvert.SerializeObject(item);
 			var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
 
-			var response = await _client.PostAsync("/api/users", stringContent);
+			var response = await _client.PostAsync("/api/items", stringContent);
 
 			//Then
 			Assert.True(response.IsSuccessStatusCode);
 		}
 
 		[Fact]
-		public async Task GivenAnAPI_WhenGettingUserByExistingID_ThenUserIsReturned()
+		public async Task GivenAnAPI_WhenGettingItemByExistingID_ThenItemIsReturned()
 		{
 			//Given
 
 			//When
-			var response = await _client.GetAsync("/api/users/0");
+			var response = await _client.GetAsync("/api/items/0");
 			var responseString = await response.Content.ReadAsStringAsync();
-			var user = JsonConvert.DeserializeObject<UserDTO>(responseString);
+			var item = JsonConvert.DeserializeObject<ItemDTO>(responseString);
 
 			//Then
-			Assert.Equal(0, user.ID);
+			Assert.Equal(0, item.ID);
 		}
 
 		[Fact]
-		public async Task GivenAnAPI_WhenGettingUserByNonExistingID_ThenNotFoundIsReturned()
+		public async Task GivenAnAPI_WhenGettingItemByNonExistingID_ThenNotFoundIsReturned()
 		{
 			//Given
 
 			//When
-			var response = await _client.GetAsync("/api/users/-1");
+			var response = await _client.GetAsync("/api/items/-1");
 			var responseString = await response.Content.ReadAsStringAsync();
 
 			//Then
 			Assert.Equal("NotFound", response.StatusCode.ToString());
 		}
+
 	}
 }

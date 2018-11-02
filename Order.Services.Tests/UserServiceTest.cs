@@ -24,7 +24,7 @@ namespace Order.Services.Tests
 		}
 
 		[Fact]
-		public void GivenAUserDataBaseAndAUser_WhenAddUser_ThenUserIsAddedToDataSet()
+		public void GivenAUserDataBaseAndAUser_WhenAddUser_ThenUserIsAddedToDatabase()
 		{
 			//Given
 			UserService userService = new UserService();
@@ -35,6 +35,30 @@ namespace Order.Services.Tests
 			//Then
 			var actual = Database.Users.First(find => find.ID == user.ID);
 			Assert.Equal(user, actual);
+		}
+
+		[Fact]
+		public void GivenAUserDataBase_WhenGetByID_ThenUserIsReturned()
+		{
+			//Given
+			UserService userService = new UserService();
+
+			//When
+			var actual = userService.GetUserByID(0);
+			//Then
+			Assert.Equal(0, actual.ID);
+		}
+
+		[Fact]
+		public void GivenAUserDataBase_WhenGetByNonExistingID_ThenNullIsReturned()
+		{
+			//Given
+			UserService userService = new UserService();
+
+			//When
+			var actual = userService.GetUserByID(-1);
+			//Then
+			Assert.Null(actual);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Order.Domain.Users;
+﻿using Order.Domain.Items;
+using Order.Domain.Users;
 using System.Collections.Generic;
 
 namespace Order.Data
@@ -19,5 +20,10 @@ namespace Order.Data
 				{1, "Active" },
 				{2, "Disabled" }
 			};
+		public static List<Item> Items = new List<Item>()
+		{
+			new Item("Wit brood", "Wit melkbrood", 1.5, 5),
+			new Item("Bruin brood", "Bruin brood met granen", 1.6, 3)
+		};
 	}
 }

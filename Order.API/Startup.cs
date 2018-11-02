@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.API.Controllers.Items;
 using Order.API.Controllers.Users;
+using Order.API.Helpers;
 using Order.Data;
 using Order.Services;
 using Order.Services.Interfaces;
@@ -25,8 +28,19 @@ namespace Order.API
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 			services.AddSingleton<IUserService, UserService>();
+			services.AddSingleton<IItemService, ItemService>();
 
 			services.AddSingleton<UserMapper>();
+			services.AddSingleton<ItemMapper>();
+
+			services.AddAuthentication("BasicAuthentication")
+				.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy("Customer", policy => policy.RequireRole("Customer", "Admin"));
+				options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+			});
 
 			services.AddSwaggerGen(c =>
 			{
@@ -38,6 +52,8 @@ namespace Order.API
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			app.UseHttpsRedirection();
+
+			app.UseAuthentication();
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>

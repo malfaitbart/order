@@ -1,7 +1,6 @@
 ﻿using Order.Domain.Users;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Order.Services.Interfaces
 {
@@ -9,5 +8,7 @@ namespace Order.Services.Interfaces
 	{
 		List<User> GetAll();
 		void AddUser(User user);
+		Task<User> Authenticate(string username, string password);
+		User GetUserByID(int id);
 	}
 }

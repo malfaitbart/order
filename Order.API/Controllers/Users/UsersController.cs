@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Order.Domain.Users;
-using Order.Services;
 using Order.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Order.API.Controllers.Users
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
-    {
+	[Authorize]
+	[Route("api/[controller]")]
+	[ApiController]
+	public class UsersController : ControllerBase
+	{
 		private readonly IUserService userService;
 		private readonly UserMapper userMapper;
 
@@ -23,25 +21,39 @@ namespace Order.API.Controllers.Users
 			this.userMapper = userMapper;
 		}
 
+		[Authorize(Policy = "Admin")]
 		[HttpGet]
-		public ActionResult<List<UserDTO_GetAll>> GetAll()
+		public ActionResult<List<UserDTO>> GetAll()
 		{
 			return userMapper.UserListToUserDTO_GetAllList(userService.GetAll());
 		}
 
+		[Authorize(Policy = "Admin")]
+		[HttpGet("{id}", Name = "GetUser")]
+		public ActionResult<UserDTO> GetUserByID(int id)
+		{
+			var result = userService.GetUserByID(id);
+			if (result == null)
+			{
+				return NotFound();
+			}
+			return Ok(userMapper.UserToUserDTO(result));
+		}
+
+		[AllowAnonymous]
 		[HttpPost]
-		public ActionResult<User> AddCustomer([FromBody]UserDTO_Register userToRegister)
+		public ActionResult<UserDTO> AddCustomer([FromBody]UserDTO_Register userToRegister)
 		{
 			try
 			{
-				userService.AddUser(userMapper.UserDTOToUser(userToRegister));
-				return Ok();
+				var user = userMapper.UserDTOToUser(userToRegister);
+				userService.AddUser(user);
+				return CreatedAtRoute("GetUser", new { id = user.ID }, userMapper.UserToUserDTO(user));
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-
-				throw;
+				return BadRequest(ex.Message);
 			}
 		}
-    }
+	}
 }

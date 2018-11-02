@@ -9,16 +9,16 @@ namespace Order.API.Controllers.Users
 		public UserDTO_Register UserToUserDTO(User user)
 		{
 			var userdto = new UserDTO_Register
-			{
-				FirstName = user.FirstName,
-				LastName = user.LastName,
-				Email = user.Email,
-				PhoneNumber = user.PhoneNumber,
-				Street = user.Street,
-				Number = user.Number,
-				PostalCode = user.PostalCode,
-				City = user.City
-			};
+			(
+				user.FirstName,
+				user.LastName,
+				user.Email,
+				user.PhoneNumber,
+				user.Street,
+				user.Number,
+				user.PostalCode,
+				user.City
+			);
 			return userdto;
 		}
 
@@ -37,9 +37,9 @@ namespace Order.API.Controllers.Users
 			return user;
 		}
 
-		public UserDTO_GetAll UserToUserDTO_GetAll(User user)
+		public UserDTO UserToUserDTO_GetAll(User user)
 		{
-			var userdto = new UserDTO_GetAll(
+			var userdto = new UserDTO(
 				user.ID,
 				user.FirstName,
 				user.LastName,
@@ -54,9 +54,9 @@ namespace Order.API.Controllers.Users
 			return userdto;
 		}
 
-		public List<UserDTO_GetAll> UserListToUserDTO_GetAllList(List<User> users)
+		public List<UserDTO> UserListToUserDTO_GetAllList(List<User> users)
 		{
-			var dtoList = new List<UserDTO_GetAll>();
+			var dtoList = new List<UserDTO>();
 			foreach (var user in users)
 			{
 				dtoList.Add(UserToUserDTO_GetAll(user));
