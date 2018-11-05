@@ -24,5 +24,15 @@ namespace Order.API.Controllers.Orders
 			}
 			return dtoList;
 		}
+
+		public List<Order_Create> OrderItemDTOListToOrderItemList(List<OrderDTO_Create> orderDTO_Create)
+		{
+			var orderitemlist = new List<Order_Create>();
+			foreach (var orderdto_create in orderDTO_Create)
+			{
+				orderitemlist.Add(new Order_Create(orderdto_create.ItemID, orderdto_create.ItemAmount));
+			}
+			return orderitemlist;
+		}
 	}
 }

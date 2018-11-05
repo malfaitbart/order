@@ -62,18 +62,18 @@ namespace Order.API.Controllers.Orders
 		{
 			string username = GetUserNameFromHeader();
 
-			var orderitemlist = new List<OrderItem>();
-			foreach (var orderdtocreate in orderDTO_Create)
-			{
-				var itemtobeordered = itemService.GetByID(orderdtocreate.ItemID);
-				if (itemtobeordered == null)
-				{
-					var errorid = Guid.NewGuid();
-					logger.LogError(errorid + $" The requested itemID {orderdtocreate.ItemID} does not exist. Order is cancelled.");
-					return BadRequest(errorid + $" The requested itemID {orderdtocreate.ItemID} does not exist. Order is cancelled.");
-				}
-				orderitemlist.Add(new OrderItem(itemtobeordered, orderdtocreate.ItemAmount));
-			}
+			var orderitemlist = orderItemMapper.OrderItemDTOListToOrderItemList(orderDTO_Create);
+			//foreach (var orderdtocreate in orderDTO_Create)
+			//{
+			//	var itemtobeordered = itemService.GetByID(orderdtocreate.ItemID);
+			//	if (itemtobeordered == null)
+			//	{
+			//		var errorid = Guid.NewGuid();
+			//		logger.LogError(errorid + $" The requested itemID {orderdtocreate.ItemID} does not exist. Order is cancelled.");
+			//		return BadRequest(errorid + $" The requested itemID {orderdtocreate.ItemID} does not exist. Order is cancelled.");
+			//	}
+			//	orderitemlist.Add(new OrderItem(itemtobeordered, orderdtocreate.ItemAmount));
+			//}
 
 			try
 			{

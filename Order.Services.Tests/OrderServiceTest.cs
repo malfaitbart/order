@@ -2,6 +2,7 @@
 using Order.Domain.Items;
 using Order.Domain.Orders;
 using Order.Domain.Orders.Exceptions;
+using Order.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,13 @@ namespace Order.Services.Tests
 		public void GivenAnOrderServiceAndItems_WhenOrdering_TheOrderIsCreated()
 		{
 			//Given
-			OrderService orderService = new OrderService();
+			ItemService itemService = new ItemService();
+			OrderService orderService = new OrderService(itemService);
 			
-			List<OrderItem> orderItems = new List<OrderItem>
+			List<Order_Create> orderItems = new List<Order_Create>
 			{
-				new OrderItem(Database.Items[0], 1),
-				new OrderItem(Database.Items[1], 2)
+				new Order_Create(Database.Items[0].ID, 1),
+				new Order_Create(Database.Items[1].ID, 2)
 			};
 			//When
 			var orderid = orderService.CreateOrder(Database.Users[0].ID, orderItems);
@@ -34,26 +36,29 @@ namespace Order.Services.Tests
 		public void GivenAnOrderServiceWhenOrderingNonExistingItems_ThenGetOrderException()
 		{
 			//Given
-			OrderService orderService = new OrderService();
+			ItemService itemService = new ItemService();
+
+			OrderService orderService = new OrderService(itemService);
 
 			var user = Database.Users[0];
-			var item = new Item("test", "zever", 10.2, 3, 1);
-			List<OrderItem> orderItems = new List<OrderItem>
+			List<Order_Create> orderItems = new List<Order_Create>
 			{
-				new OrderItem(item,2),
+				new Order_Create(-1,2),
 			};
 			//When
 			Action act = () => orderService.CreateOrder(user.ID, orderItems);
 
 			//Then
 			var exception = Assert.Throws<OrderException>(act);
-			Assert.Equal($"The item with id {item.ID} does not exist.", exception.Message);
+			Assert.Equal($"The item with id -1 does not exist.", exception.Message);
 		}
 		[Fact]
 		public void GivenAnOrderService_WhenGetAll_ThenGetListOdOrders()
 		{
 			//Given
-			OrderService orderService = new OrderService();
+			ItemService itemService = new ItemService();
+
+			OrderService orderService = new OrderService(itemService);
 			//When
 			var actual = orderService.GetAll();
 
@@ -64,19 +69,16 @@ namespace Order.Services.Tests
 		public void GivenAnOrderService_WhenGetByExistingId_ThenGetOrder()
 		{
 			//Given
-			OrderService orderService = new OrderService();
+			ItemService itemService = new ItemService();
 
-			var item1 = Database.Items[0];
-			var amount1 = 1;
-			var item2 = Database.Items[1];
-			var amount2 = 2;
+			OrderService orderService = new OrderService(itemService);
 
 			var user = Database.Users[0];
 
-			List<OrderItem> orderItems = new List<OrderItem>
+			List<Order_Create> orderItems = new List<Order_Create>
 			{
-				new OrderItem(item1, amount1),
-				new OrderItem(item2, amount2)
+				new Order_Create(Database.Items[0].ID, 1),
+				new Order_Create(Database.Items[1].ID, 2)
 			};
 			orderService.CreateOrder(user.ID, orderItems);
 			//When
@@ -89,7 +91,9 @@ namespace Order.Services.Tests
 		public void GivenAnOrderService_WhenGetByNonExistingId_ThenGetOrder()
 		{
 			//Given
-			OrderService orderService = new OrderService();
+			ItemService itemService = new ItemService();
+
+			OrderService orderService = new OrderService(itemService);
 			//When
 			var actual = orderService.GetByID(-1);
 

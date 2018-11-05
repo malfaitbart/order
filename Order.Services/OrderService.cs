@@ -12,28 +12,52 @@ namespace Order.Services
 {
 	public class OrderService : IOrderService
 	{
-		public int CreateOrder(int userID, List<OrderItem> orderItems)
+		private readonly IItemService itemService;
+
+		public OrderService(IItemService itemService)
+		{
+			this.itemService = itemService;
+		}
+
+		public int CreateOrder(int userID, List<Order_Create> orderCreate)
 		{
 			double totalPrice = 0;
-			foreach (var item in orderItems)
+			List<OrderItem> orderItemsList = new List<OrderItem>();
+
+			foreach (var orderdtocreate in orderCreate)
 			{
-				if(Database.Items.FirstOrDefault(find => find.ID == item.ItemID) == null)
-				{
-					throw new OrderException($"The item with id {item.ItemID} does not exist.");
-				}
-				totalPrice += item.ItemPrice * item.Amount;
+				var itemtobeordered = itemService.GetByID(orderdtocreate.ItemID);
+
+				CheckIfItemExistsInDatabase(orderdtocreate, itemtobeordered);
+
+				totalPrice += itemtobeordered.Price * orderdtocreate.ItemAmount;
+
+				orderItemsList.Add(new OrderItem(itemtobeordered, orderdtocreate.ItemAmount));
 			}
 
 			Domain.Orders.Order order = new Domain.Orders.Order(totalPrice, userID);
 			Database.Orders.Add(order);
 
-			foreach (var orderitem in orderItems)
+			SetOrderIDOnTheOrderedItemsAndStoreInDB(orderItemsList, order);
+
+			return order.ID;
+		}
+
+		private static void SetOrderIDOnTheOrderedItemsAndStoreInDB(List<OrderItem> orderItemsList, Domain.Orders.Order order)
+		{
+			foreach (var orderitem in orderItemsList)
 			{
 				orderitem.SetOrderID(order.ID);
 				Database.OrderItems.Add(orderitem);
 			}
+		}
 
-			return order.ID;
+		private static void CheckIfItemExistsInDatabase(Order_Create orderdtocreate, Item itemtobeordered)
+		{
+			if (itemtobeordered == null)
+			{
+				throw new OrderException($"The item with id {orderdtocreate.ItemID} does not exist.");
+			}
 		}
 
 		private double CalculatePrice(double price, int amount)
