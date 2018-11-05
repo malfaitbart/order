@@ -36,5 +36,27 @@ namespace Order.Domain.Users
 
 			CreateID++;
 		}
+
+		public User(string firstName, string lastName, string email, string phoneNumber, string street, string number, string postalCode, string city, int roleID)
+		{
+			ID = CreateID;
+			FirstName = firstName;
+			LastName = lastName;
+			Email = email;
+			PhoneNumber = phoneNumber;
+			Street = street;
+			Number = number;
+			PostalCode = postalCode;
+			City = city;
+			RoleID = roleID;
+			Status = 1;
+
+			CreateID++;
+		}
+
+		public void SetAdmin()
+		{
+			RoleID = 2;
+		}
 	}
 }

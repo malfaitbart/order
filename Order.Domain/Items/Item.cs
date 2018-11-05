@@ -11,16 +11,18 @@ namespace Order.Domain.Items
 		public string Description { get; private set; }
 		public double Price { get; private set; }
 		public int Amount { get; private set; }
+		public int Status { get; private set; }
 
 		private static int CreateID;
 
-		public Item(string name, string description, double price, int myProperty)
+		public Item(string name, string description, double price, int amount, int status)
 		{
 			ID = CreateID;
 			Name = name;
 			Description = description;
 			Price = price;
-			Amount = myProperty;
+			Amount = amount;
+			Status = status;
 
 			CreateID++;
 		}

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Order.API.Controllers.Users;
+using Order.Data;
 using Order.Domain.Users;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,11 +26,23 @@ namespace Order.API.Tests
 			_client.DefaultRequestHeaders.Accept.Add(
 				new MediaTypeWithQualityHeaderValue("application/json"));
 		}
+
+		private AuthenticationHeaderValue CreateBasicHeader(string username, string password)
+		{
+			byte[] byteArray = Encoding.UTF8.GetBytes(username + ":" + password);
+			return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+		}
+
+
 		[Fact]
 		public async Task GivenAnAPI_WhenCallingAllUsers_ThenGetListOfUsers()
 		{
 			//Given
+			Database.Users[1].SetAdmin();
+			var username = Database.Users[1].Email;
+			var password = "";
 
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 			//When
 			var response = await _client.GetAsync("/api/users");
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -59,6 +73,11 @@ namespace Order.API.Tests
 		public async Task GivenAnAPI_WhenGettingUserByExistingID_ThenUserIsReturned()
 		{
 			//Given
+			Database.Users[1].SetAdmin();
+			var username = Database.Users[1].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
 			var response = await _client.GetAsync("/api/users/0");
@@ -73,6 +92,11 @@ namespace Order.API.Tests
 		public async Task GivenAnAPI_WhenGettingUserByNonExistingID_ThenNotFoundIsReturned()
 		{
 			//Given
+			Database.Users[1].SetAdmin();
+			var username = Database.Users[1].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
 			var response = await _client.GetAsync("/api/users/-1");

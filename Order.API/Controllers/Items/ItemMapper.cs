@@ -37,7 +37,8 @@ namespace Order.API.Controllers.Items
 				itemDTO.Name,
 				itemDTO.Description,
 				itemDTO.Price,
-				itemDTO.Amount
+				itemDTO.Amount,
+				1
 				);
 			return item;
 		}

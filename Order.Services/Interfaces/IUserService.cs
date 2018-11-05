@@ -10,5 +10,6 @@ namespace Order.Services.Interfaces
 		void AddUser(User user);
 		Task<User> Authenticate(string username, string password);
 		User GetUserByID(int id);
+		int GetUserID(string email);
 	}
 }

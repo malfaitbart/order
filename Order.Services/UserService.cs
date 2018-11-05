@@ -34,5 +34,11 @@ namespace Order.Services
 		{
 			return Database.Users.FirstOrDefault(user => user.ID == id);
 		}
+
+		public int GetUserID(string email)
+		{
+			var customer = Database.Users.FirstOrDefault(user => user.Email == email);
+			return customer.ID;
+		}
 	}
 }

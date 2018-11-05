@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Order.API.Controllers.Items;
+using Order.Data;
 using Order.Domain.Items;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,22 @@ namespace Order.API.Tests
 			_client.DefaultRequestHeaders.Accept.Add(
 				new MediaTypeWithQualityHeaderValue("application/json"));
 		}
+
+		private AuthenticationHeaderValue CreateBasicHeader(string username, string password)
+		{
+			byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(username + ":" + password);
+			return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+		}
+
+
 		[Fact]
 		public async Task GivenAnAPI_WhenCallingAllItems_ThenGetListOfItems()
 		{
 			//Given
+			var username = Database.Users[0].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
 			var response = await _client.GetAsync("/api/items");
@@ -45,7 +58,12 @@ namespace Order.API.Tests
 		public async Task GivenAnAPI_WhenPostingItemData_ThenItemIsCreatedOnBackendAsync()
 		{
 			//Given
-			var item = new Item("test", "test", 0.0, 0);
+			var item = new Item("test", "test", 0.0, 0, 1);
+			Database.Users[1].SetAdmin();
+			var username = Database.Users[1].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
 			var content = JsonConvert.SerializeObject(item);

@@ -26,7 +26,7 @@ namespace Order.Services.Tests
 		{
 			//Given
 			ItemService itemService = new ItemService();
-			Item item = new Item("test", "test", 5.0, 3);
+			Item item = new Item("test", "test", 5.0, 3, 1);
 			//When
 			itemService.AddItem(item);
 			//Then
@@ -39,7 +39,7 @@ namespace Order.Services.Tests
 		{
 			//Given
 			ItemService itemService = new ItemService();
-			Item item = new Item("test", "test", 5.0, 3);
+			Item item = new Item("test", "test", 5.0, 3, 1);
 			itemService.AddItem(item);
 			//When
 			var actual = itemService.GetByID(item.ID);

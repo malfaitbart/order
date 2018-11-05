@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Order.API.Controllers.Items;
+using Order.API.Controllers.Orders;
 using Order.API.Controllers.Users;
 using Order.API.Helpers;
-using Order.Data;
 using Order.Services;
 using Order.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
@@ -29,9 +29,12 @@ namespace Order.API
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 			services.AddSingleton<IUserService, UserService>();
 			services.AddSingleton<IItemService, ItemService>();
+			services.AddSingleton<IOrderService, OrderService>();
 
 			services.AddSingleton<UserMapper>();
 			services.AddSingleton<ItemMapper>();
+			services.AddSingleton<OrderMapper>();
+			services.AddSingleton<OrderItemMapper>();
 
 			services.AddAuthentication("BasicAuthentication")
 				.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
@@ -46,6 +49,7 @@ namespace Order.API
 			{
 				c.SwaggerDoc("v1", new Info { Title = "Order API", Version = "v1" });
 			});
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +63,18 @@ namespace Order.API
 			app.UseSwaggerUI(c =>
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order API");
+				c.DefaultModelExpandDepth(2);
+				c.DefaultModelRendering(ModelRendering.Model);
+				c.DefaultModelsExpandDepth(-1);
+				c.DisplayOperationId();
+				c.DisplayRequestDuration();
+				c.DocExpansion(DocExpansion.None);
+				c.EnableDeepLinking();
+				c.EnableFilter();
+				c.MaxDisplayedTags(5);
+				c.ShowExtensions();
+				c.EnableValidator();
+				c.SupportedSubmitMethods(SubmitMethod.Get, SubmitMethod.Head);
 			});
 
 			if (env.IsDevelopment())
@@ -71,6 +87,7 @@ namespace Order.API
 			}
 
 			app.UseMvc();
+			
 		}
 	}
 }
