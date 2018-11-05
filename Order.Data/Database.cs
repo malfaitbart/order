@@ -25,8 +25,8 @@ namespace Order.Data
 			};
 		public static List<User> Users = new List<User>()
 			{
-				new User("Bart", "Malfait", "malfaitbart@gmail.com", "0478513065", "Minister Alfred De Taeyestraat", "25", "8550", "Zwevegem"),
-				new User("Admin", "Admin", "admin@localhost.be", "0000000", "street", "0", "0", "0", 2)
+				new User("Bart", "Malfait", "malfaitbart@gmail.com", "0478513065", new Address("Minister Alfred De Taeyestraat", "25", "8550", "Zwevegem")),
+				new User("Admin", "Admin", "admin@localhost.be", "0000000", new Address("street", "0", "0", "0"), 2)
 			};
 
 		public static List<Item> Items = new List<Item>()

@@ -25,7 +25,7 @@ namespace Order.API.Controllers.Users
 		[HttpGet]
 		public ActionResult<List<UserDTO>> GetAll()
 		{
-			return userMapper.UserListToUserDTO_GetAllList(userService.GetAll());
+			return userMapper.UserListToUserDTOList(userService.GetAll());
 		}
 
 		[Authorize(Policy = "Admin")]

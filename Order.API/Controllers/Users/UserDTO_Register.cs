@@ -6,21 +6,15 @@
 		public string LastName { get; set; }
 		public string Email { get; set; }
 		public string PhoneNumber { get; set; }
-		public string Street { get; set; }
-		public string Number { get; set; }
-		public string PostalCode { get; set; }
-		public string City { get; set; }
+		public AddressDTO AddressDTO { get; set; }
 
-		public UserDTO_Register(string firstName, string lastName, string email, string phoneNumber, string street, string number, string postalCode, string city)
+		public UserDTO_Register(string firstName, string lastName, string email, string phoneNumber,AddressDTO addressDTO)
 		{
 			FirstName = firstName;
 			LastName = lastName;
 			Email = email;
 			PhoneNumber = phoneNumber;
-			Street = street;
-			Number = number;
-			PostalCode = postalCode;
-			City = city;
+			AddressDTO = addressDTO;
 		}
 	}
 }

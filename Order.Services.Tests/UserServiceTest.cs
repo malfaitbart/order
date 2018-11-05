@@ -29,7 +29,7 @@ namespace Order.Services.Tests
 			//Given
 			UserService userService = new UserService();
 			
-			User user = new User("test", "test", "test@test.com", "00000000", "test", "test", "0000", "test");
+			User user = new User("test", "test", "test@test.com", "00000000", new Address("test", "test", "0000", "test"));
 			//When
 			userService.AddUser(user);
 			//Then

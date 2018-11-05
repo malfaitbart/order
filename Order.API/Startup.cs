@@ -64,7 +64,7 @@ namespace Order.API
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order API");
 				c.DefaultModelExpandDepth(2);
-				c.DefaultModelRendering(ModelRendering.Model);
+				c.DefaultModelRendering(ModelRendering.Example);
 				c.DefaultModelsExpandDepth(-1);
 				c.DisplayOperationId();
 				c.DisplayRequestDuration();

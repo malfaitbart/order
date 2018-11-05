@@ -6,22 +6,6 @@ namespace Order.API.Controllers.Users
 {
 	public class UserMapper
 	{
-		public UserDTO_Register UserToUserDTO(User user)
-		{
-			var userdto = new UserDTO_Register
-			(
-				user.FirstName,
-				user.LastName,
-				user.Email,
-				user.PhoneNumber,
-				user.Street,
-				user.Number,
-				user.PostalCode,
-				user.City
-			);
-			return userdto;
-		}
-
 		public User UserDTOToUser(UserDTO_Register userDTO)
 		{
 			var user = new User(
@@ -29,15 +13,12 @@ namespace Order.API.Controllers.Users
 				userDTO.LastName,
 				userDTO.Email,
 				userDTO.PhoneNumber,
-				userDTO.Street,
-				userDTO.Number,
-				userDTO.PostalCode,
-				userDTO.City
+				new Address(userDTO.AddressDTO.Street, userDTO.AddressDTO.Number, userDTO.AddressDTO.PostalCode, userDTO.AddressDTO.City)
 			);
 			return user;
 		}
 
-		public UserDTO UserToUserDTO_GetAll(User user)
+		public UserDTO UserToUserDTO(User user)
 		{
 			var userdto = new UserDTO(
 				user.ID,
@@ -45,21 +26,18 @@ namespace Order.API.Controllers.Users
 				user.LastName,
 				user.Email,
 				user.PhoneNumber,
-				user.Street,
-				user.Number,
-				user.PostalCode,
-				user.City,
+				new AddressDTO(user.Address.Street, user.Address.Number, user.Address.PostalCode, user.Address.City),
 				Database.UserRoles[user.RoleID],
 				Database.UserStatus[user.Status]);
 			return userdto;
 		}
 
-		public List<UserDTO> UserListToUserDTO_GetAllList(List<User> users)
+		public List<UserDTO> UserListToUserDTOList(List<User> users)
 		{
 			var dtoList = new List<UserDTO>();
 			foreach (var user in users)
 			{
-				dtoList.Add(UserToUserDTO_GetAll(user));
+				dtoList.Add(UserToUserDTO(user));
 			}
 			return dtoList;
 		}

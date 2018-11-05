@@ -11,43 +11,33 @@ namespace Order.Domain.Users
 		public string LastName { get; private set; }
 		public string Email { get; private set; }
 		public string PhoneNumber { get; private set; }
-		public string Street { get; private set; }
-		public string Number { get; private set; }
-		public string PostalCode { get; private set; }
-		public string City { get; private set; }
+		public Address Address{ get; private set; }
 		public int RoleID { get; private set; }
 		public int Status { get; private set; }
-
 		private static int CreateID;
 
-		public User(string firstName, string lastName, string email, string phoneNumber, string street, string number, string postalCode, string city)
+		public User(string firstName, string lastName, string email, string phoneNumber, Address address)
 		{
 			ID = CreateID;
 			FirstName = firstName;
 			LastName = lastName;
 			Email = email;
 			PhoneNumber = phoneNumber;
-			Street = street;
-			Number = number;
-			PostalCode = postalCode;
-			City = city;
+			Address = address;
 			RoleID = 1;
 			Status = 1;
 
 			CreateID++;
 		}
 
-		public User(string firstName, string lastName, string email, string phoneNumber, string street, string number, string postalCode, string city, int roleID)
+		public User(string firstName, string lastName, string email, string phoneNumber, Address address, int roleID)
 		{
 			ID = CreateID;
 			FirstName = firstName;
 			LastName = lastName;
 			Email = email;
 			PhoneNumber = phoneNumber;
-			Street = street;
-			Number = number;
-			PostalCode = postalCode;
-			City = city;
+			Address = address;
 			RoleID = roleID;
 			Status = 1;
 
