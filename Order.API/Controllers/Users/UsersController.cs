@@ -50,6 +50,10 @@ namespace Order.API.Controllers.Users
 				userService.AddUser(user);
 				return CreatedAtRoute("GetUser", new { id = user.ID }, userMapper.UserToUserDTO(user));
 			}
+			catch (FormatException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 			catch (Exception ex)
 			{
 				return BadRequest(ex.Message);

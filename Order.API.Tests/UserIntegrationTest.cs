@@ -57,7 +57,7 @@ namespace Order.API.Tests
 		public async Task GivenAnAPI_WhenPostingUserData_ThenUserIsCreatedOnBackendAsync()
 		{
 			//Given
-			var user = new User("test", "test", "test@test.com", "test", "test", "test", "teste", "teste");
+			var user = new UserDTO_Register("test", "test", "test@test.com", "test", new AddressDTO("test", "test", "teste", "teste"));
 
 			//When
 			var content = JsonConvert.SerializeObject(user);

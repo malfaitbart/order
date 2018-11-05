@@ -1,5 +1,6 @@
 ﻿using Order.Data;
 using Order.Domain.Users;
+using Order.Domain.Users.Exceptions;
 using Order.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -60,5 +61,34 @@ namespace Order.Services.Tests
 			//Then
 			Assert.Null(actual);
 		}
+		[Fact]
+		public void GivenAUserDataBaseAndAUser_WhenAddUserWithBadMail_ThenGetException()
+		{
+			//Given
+			UserService userService = new UserService();
+
+			User user = new User("test", "test", "testtest", "00000000", new Address("test", "test", "0000", "test"));
+			//When
+			Action act = () => userService.AddUser(user);
+			//Then
+			var actual = Assert.Throws<FormatException>(act);
+			Assert.Equal("E-mailaddress is not in valid format(example: bla@bla.com)", actual.Message);
+		}
+		[Fact]
+		public void GivenAUserDataBaseAndAUser_WhenAddUserWithExistingMail_ThenGetException()
+		{
+			//Given
+			UserService userService = new UserService();
+
+			User user = new User("test", "test", "test@test.be", "00000000", new Address("test", "test", "0000", "test"));
+			//When
+			userService.AddUser(user);
+			Action act = () => userService.AddUser(user);
+			//Then
+			var actual = Assert.Throws<UserException>(act);
+			Assert.Equal("E-MailAddress already exists!", actual.Message);
+		}
+
+
 	}
 }
