@@ -10,7 +10,7 @@ namespace Order.Domain.Items
 		public string Name { get; private set; }
 		public string Description { get; private set; }
 		public double Price { get; private set; }
-		public int Amount { get; private set; }
+		public int StockAmount { get; private set; }
 		public int Status { get; private set; }
 
 		private static int CreateID;
@@ -21,7 +21,7 @@ namespace Order.Domain.Items
 			Name = name;
 			Description = description;
 			Price = price;
-			Amount = amount;
+			StockAmount = amount;
 			Status = status;
 
 			CreateID++;
@@ -32,7 +32,7 @@ namespace Order.Domain.Items
 			Name = itemName;
 			Description = itemDescription;
 			Price = itemPrice;
-			Amount = itemAmount;
+			StockAmount = itemAmount;
 		}
 
 		public void UpdateName(string itemName)
@@ -52,7 +52,7 @@ namespace Order.Domain.Items
 
 		public void UpdateAmount(int itemAmount)
 		{
-			Amount = itemAmount;
+			StockAmount = itemAmount;
 		}
 
 		public void UpdateStatus(int itemStatus)

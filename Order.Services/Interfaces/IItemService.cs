@@ -11,5 +11,7 @@ namespace Order.Services.Interfaces
 		Item GetByID(int id);
 		void AddItem(Item item);
 		void UpdateItem(int itemID, string itemName, string itemDescription, double itemPrice, int itemAmount);
+		List<Item> GetAllSortedByStock();
+		List<Item> GetAllSortedByStock(string stockindicator);
 	}
 }

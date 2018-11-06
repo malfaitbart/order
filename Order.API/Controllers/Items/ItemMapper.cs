@@ -9,38 +9,48 @@ namespace Order.API.Controllers.Items
 {
 	public class ItemMapper
 	{
-		internal ItemDTO ItemToItemDTO(Item item)
+		internal Item ToItem(ItemDTOWithoutID itemDTOWithoutID)
+		{
+			Item item = new Item(
+				itemDTOWithoutID.Name,
+				itemDTOWithoutID.Description,
+				itemDTOWithoutID.Price,
+				itemDTOWithoutID.Amount,
+				1
+				);
+			return item;
+		}
+
+		internal ItemDTO ToDTO(Item item)
 		{
 			ItemDTO itemDTO = new ItemDTO(
 				item.ID,
 				item.Name,
 				item.Description,
 				item.Price,
-				item.Amount
+				item.StockAmount
 				);
 			return itemDTO;
 		}
 
-		internal List<ItemDTO> ItemListToIteMDTOList(List<Item> list)
+		internal List<ItemDTO> ToDTOList(List<Item> list)
 		{
 			List<ItemDTO> itemDTO_GetAlls = new List<ItemDTO>();
 			foreach (var item in list)
 			{
-				itemDTO_GetAlls.Add(ItemToItemDTO(item));
+				itemDTO_GetAlls.Add(ToDTO(item));
 			}
 			return itemDTO_GetAlls;
 		}
 
-		internal Item ItemDTO_AddToItem(ItemDTOWithoutID itemDTO)
+		internal List<ItemDTOForStockResupply> toDTOFotStockResupplyList(List<Item> items)
 		{
-			Item item = new Item(
-				itemDTO.Name,
-				itemDTO.Description,
-				itemDTO.Price,
-				itemDTO.Amount,
-				1
-				);
-			return item;
+			List<ItemDTOForStockResupply> itemDTOForStockResupplies = new List<ItemDTOForStockResupply>();
+			foreach (var item in items)
+			{
+				itemDTOForStockResupplies.Add(new ItemDTOForStockResupply(item.ID, item.Name, item.Description, item.Price, item.StockAmount));
+			}
+			return itemDTOForStockResupplies;
 		}
 
 

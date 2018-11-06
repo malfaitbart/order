@@ -35,5 +35,26 @@ namespace Order.Services
 			}
 			Database.Items[itemID].UpdateAll(itemName, itemDescription, itemPrice, itemAmount);
 		}
+
+		public List<Item> GetAllSortedByStock()
+		{
+			return Database.Items.OrderBy(sort => sort.StockAmount).ToList();
+		}
+
+		public List<Item> GetAllSortedByStock(string stockindicator)
+		{
+			switch (stockindicator)
+			{
+				case "STOCK_LOW":
+					return Database.Items.Where(item => item.StockAmount < 5).ToList();
+				case "STOCK_MEDIUM":
+					return Database.Items.Where(item => item.StockAmount < 10).ToList();
+				case "STOCK_HIGH":
+					return Database.Items.Where(item => item.StockAmount >= 10).ToList();
+				default:
+					throw new ItemException("Please use one of the following as query value: STOCK_LOW, STOCK_MEDIUM, STOCK_HIGH.\nOther values are not allowed.");
+
+			}
+		}
 	}
 }

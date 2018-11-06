@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Order.Domain.Items.Exceptions;
 using Order.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Order.API.Controllers.Items
 {
 	[Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ItemsController : ControllerBase
-    {
+	[Route("api/[controller]")]
+	[ApiController]
+	public class ItemsController : ControllerBase
+	{
 		private readonly IItemService itemService;
 		private readonly ItemMapper itemMapper;
 		private readonly ILogger<ItemsController> logger;
@@ -31,7 +28,7 @@ namespace Order.API.Controllers.Items
 		[HttpGet]
 		public ActionResult GetAll()
 		{
-			return Ok(itemMapper.ItemListToIteMDTOList(itemService.GetAll()));
+			return Ok(itemMapper.ToDTOList(itemService.GetAll()));
 		}
 
 		[AllowAnonymous]
@@ -43,14 +40,14 @@ namespace Order.API.Controllers.Items
 			{
 				return NotFound();
 			}
-			return Ok(itemMapper.ItemToItemDTO(result));
+			return Ok(itemMapper.ToDTO(result));
 		}
 
 		[Authorize(Policy = "Admin")]
 		[HttpPost]
 		public ActionResult<ItemDTOWithoutID> AddItem(ItemDTOWithoutID itemDTO)
 		{
-			itemService.AddItem(itemMapper.ItemDTO_AddToItem(itemDTO));
+			itemService.AddItem(itemMapper.ToItem(itemDTO));
 			return Ok(itemDTO);
 		}
 
@@ -60,14 +57,36 @@ namespace Order.API.Controllers.Items
 		{
 			try
 			{
-			itemService.UpdateItem(id, itemDTOWithoutID.Name, itemDTOWithoutID.Description, itemDTOWithoutID.Price, itemDTOWithoutID.Amount);
-			return Ok(GetItemByID(id));
+				itemService.UpdateItem(id, itemDTOWithoutID.Name, itemDTOWithoutID.Description, itemDTOWithoutID.Price, itemDTOWithoutID.Amount);
+				return Ok(GetItemByID(id));
 			}
 			catch (ItemException ex)
 			{
 				var errorid = Guid.NewGuid();
 				logger.LogError(errorid + " " + ex.Message);
 				return BadRequest(errorid + " " + ex.Message);
+			}
+		}
+
+		[Authorize(Roles = "Admin")]
+		[HttpGet("[action]")]
+		public ActionResult<List<ItemDTOForStockResupply>> GetItemsOrderedByResupplyNeeds([FromQuery]string indicator)
+		{
+			if (indicator == null)
+			{
+				return itemMapper.toDTOFotStockResupplyList(itemService.GetAllSortedByStock());
+			} else
+			{
+				try
+				{
+				return itemMapper.toDTOFotStockResupplyList(itemService.GetAllSortedByStock(indicator));
+				}
+				catch (ItemException ex)
+				{
+					var errorid = Guid.NewGuid();
+					logger.LogError(errorid + " " + ex.Message);
+					return BadRequest(errorid + " " + ex.Message);
+				}
 			}
 		}
 	}

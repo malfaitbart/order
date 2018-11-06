@@ -23,7 +23,7 @@ namespace Order.Domain.Orders
 
 		private DateTime CheckStockToDecideShippIngDate(Item item, int amount)
 		{
-			if (item.Amount > amount)
+			if (item.StockAmount > amount)
 			{
 				return DateTime.Now.Date;
 			}
