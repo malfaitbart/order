@@ -26,7 +26,7 @@ namespace Order.Domain.Orders
 			double totalPrice = 0;
 			foreach (var item in ItemGroup)
 			{
-				totalPrice += item.ItemPrice * item.Amount;
+				totalPrice += item.ItemGroupTotalPrice;
 			}
 			return totalPrice;
 		}

@@ -45,7 +45,7 @@ namespace Order.API.Tests
 			//When
 			var response = await _client.GetAsync("/api/orders");
 			var responseString = await response.Content.ReadAsStringAsync();
-			var users = JsonConvert.DeserializeObject<List<OrderDTO>>(responseString);
+			var orders = JsonConvert.DeserializeObject<List<OrderDTO>>(responseString);
 
 			//Then
 			Assert.True(response.IsSuccessStatusCode);
@@ -63,7 +63,7 @@ namespace Order.API.Tests
 			//When
 			var response = await _client.GetAsync("/api/orders");
 			var responseString = await response.Content.ReadAsStringAsync();
-			var users = JsonConvert.DeserializeObject<List<OrderDTO>>(responseString);
+			var orders = JsonConvert.DeserializeObject<List<OrderDTO>>(responseString);
 
 			//Then
 			Assert.Equal("Forbidden",response.StatusCode.ToString());
@@ -92,6 +92,24 @@ namespace Order.API.Tests
 			Assert.True(response.IsSuccessStatusCode);
 		}
 
+		[Fact]
+		public async Task GivenAnAPI_WhenCallingAllOrdersReport_ThenGetReportforAuthenticatedUser()
+		{
+			//Given
+			var username = Database.Users[0].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+
+			//When
+			var response = await _client.GetAsync("/api/Orders/OrderReport");
+			var responseString = await response.Content.ReadAsStringAsync();
+			var report = JsonConvert.DeserializeObject<OrderReportDTO>(responseString);
+
+			//Then
+			Assert.True(response.IsSuccessStatusCode);
+
+		}
 
 	}
 }

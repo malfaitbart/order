@@ -11,5 +11,6 @@ namespace Order.Services.Interfaces
 		List<Domain.Orders.Order> GetAll();
 		int CreateOrder(int customerID, List<IncomingOrderItemGroup> incomingOrderItems);
 		Domain.Orders.Order GetByID(int id);
+		Tuple<List<Domain.Orders.Order>, double> GetOrdersReport(int customerID);
 	}
 }

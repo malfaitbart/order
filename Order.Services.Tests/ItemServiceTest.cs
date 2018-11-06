@@ -1,5 +1,6 @@
 ﻿using Order.Data;
 using Order.Domain.Items;
+using Order.Domain.Items.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,5 +57,32 @@ namespace Order.Services.Tests
 			//Then
 			Assert.Null(actual);
 		}
+
+		[Fact]
+		public void GivenAnItemDatabaseAndAnItemService_WhenUpdateItem_ThenItemIsUpdatedInDB()
+		{
+			//Given
+			ItemService itemService = new ItemService();
+
+			//When
+			itemService.UpdateItem(0, "testnaam", "testomschrijving", 4.3, 6);
+
+			//Then
+			Assert.Equal("testnaam", Database.Items[0].Name);
+		}
+		[Fact]
+		public void GivenAnItemDatabaseAndAnItemService_WhenUpdateItemThatDoesNotExist_ThenExceptionisthrown()
+		{
+			//Given
+			ItemService itemService = new ItemService();
+
+			//When
+			Action act = () => itemService.UpdateItem(-1, "testnaam", "testomschrijving", 4.3, 6);
+
+			//Then
+			var exception = Assert.Throws<ItemException>(act);
+			Assert.Equal("Item with id -1 does not exist. Update cancelled.", exception.Message);
+		}
+
 	}
 }

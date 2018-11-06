@@ -1,5 +1,7 @@
-﻿using Order.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Order.Data;
 using Order.Domain.Orders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,6 +29,15 @@ namespace Order.API.Controllers.Orders
 				dtoList.Add(ToDTO(order));
 			}
 			return dtoList;
+		}
+
+		public  OrderReportDTO ToOrderReportDTO(Tuple<List<Domain.Orders.Order>, double> result)
+		{
+			List<OrderDTO> orderDTOs = ToDTOList(result.Item1);
+
+
+			var reportDTO = new OrderReportDTO(orderDTOs, result.Item2);
+			return reportDTO;
 		}
 	}
 }

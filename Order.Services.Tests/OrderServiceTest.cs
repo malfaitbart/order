@@ -37,7 +37,6 @@ namespace Order.Services.Tests
 		{
 			//Given
 			ItemService itemService = new ItemService();
-
 			OrderService orderService = new OrderService(itemService);
 
 			var user = Database.Users[0];
@@ -57,7 +56,6 @@ namespace Order.Services.Tests
 		{
 			//Given
 			ItemService itemService = new ItemService();
-
 			OrderService orderService = new OrderService(itemService);
 			//When
 			var actual = orderService.GetAll();
@@ -70,7 +68,6 @@ namespace Order.Services.Tests
 		{
 			//Given
 			ItemService itemService = new ItemService();
-
 			OrderService orderService = new OrderService(itemService);
 
 			var user = Database.Users[0];
@@ -92,7 +89,6 @@ namespace Order.Services.Tests
 		{
 			//Given
 			ItemService itemService = new ItemService();
-
 			OrderService orderService = new OrderService(itemService);
 			//When
 			var actual = orderService.GetByID(-1);
@@ -100,6 +96,30 @@ namespace Order.Services.Tests
 			//Then
 			Assert.Null(actual);
 		}
+		[Fact]
+		public void GivenOrdersByAUser_WhenGetOrdersReport_ThenGetAllOrdersFromUser()
+		{
+			//Given
+			ItemService itemService = new ItemService();
+			OrderService orderService = new OrderService(itemService);
+			List<IncomingOrderItemGroup> itemGroup = new List<IncomingOrderItemGroup>
+			{
+				new IncomingOrderItemGroup(Database.Items[0].ID, 1),
+				new IncomingOrderItemGroup(Database.Items[1].ID, 2)
+			};
+			orderService.CreateOrder(Database.Users[0].ID, itemGroup);
+			itemGroup = new List<IncomingOrderItemGroup>
+			{
+				new IncomingOrderItemGroup(Database.Items[0].ID, 1),
+				new IncomingOrderItemGroup(Database.Items[1].ID, 2)
+			};
+			orderService.CreateOrder(Database.Users[0].ID, itemGroup);
 
+			//When
+			var actual = orderService.GetOrdersReport(0);
+
+			//Then
+			Assert.IsType<List<Domain.Orders.Order>>(actual.Item1);
+		}
 	}
 }

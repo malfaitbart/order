@@ -11,7 +11,7 @@ namespace Order.API.Controllers.Orders
 	{
 		public OrderItemGroupDTO ToOrderItemDTO(OrderItemGroup orderItem)
 		{
-			var dto = new OrderItemGroupDTO(orderItem.ItemID, orderItem.ItemName, orderItem.ItemPrice, orderItem.Amount, orderItem.ShippingDate, orderItem.OrderID);
+			var dto = new OrderItemGroupDTO(orderItem.ItemID, orderItem.ItemName, orderItem.ItemPrice, orderItem.Amount, orderItem.ShippingDate, orderItem.ItemGroupTotalPrice);
 			return dto;
 		} 
 

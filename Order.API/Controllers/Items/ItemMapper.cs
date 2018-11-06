@@ -31,7 +31,7 @@ namespace Order.API.Controllers.Items
 			return itemDTO_GetAlls;
 		}
 
-		internal Item ItemDTO_AddToItem(ItemDTO_Add itemDTO)
+		internal Item ItemDTO_AddToItem(ItemDTOWithoutID itemDTO)
 		{
 			Item item = new Item(
 				itemDTO.Name,

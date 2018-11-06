@@ -26,5 +26,38 @@ namespace Order.Domain.Items
 
 			CreateID++;
 		}
+
+		public void UpdateAll(string itemName, string itemDescription, double itemPrice, int itemAmount)
+		{
+			Name = itemName;
+			Description = itemDescription;
+			Price = itemPrice;
+			Amount = itemAmount;
+		}
+
+		public void UpdateName(string itemName)
+		{
+			Name = itemName;
+		}
+
+		public void UpdateDescription(string itemDescription)
+		{
+			Description = itemDescription;
+		}
+
+		public void UpdatePrice(double itemPrice)
+		{
+			Price = itemPrice;
+		}
+
+		public void UpdateAmount(int itemAmount)
+		{
+			Amount = itemAmount;
+		}
+
+		public void UpdateStatus(int itemStatus)
+		{
+			Status = itemStatus;
+		}
 	}
 }

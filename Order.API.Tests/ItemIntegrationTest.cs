@@ -47,7 +47,7 @@ namespace Order.API.Tests
 			//When
 			var response = await _client.GetAsync("/api/items");
 			var responseString = await response.Content.ReadAsStringAsync();
-			var users = JsonConvert.DeserializeObject<List<ItemDTO>>(responseString);
+			var items = JsonConvert.DeserializeObject<List<ItemDTO>>(responseString);
 
 			//Then
 			Assert.True(response.IsSuccessStatusCode);
@@ -59,7 +59,6 @@ namespace Order.API.Tests
 		{
 			//Given
 			var item = new Item("test", "test", 0.0, 0, 1);
-			Database.Users[1].SetAdmin();
 			var username = Database.Users[1].Email;
 			var password = "";
 
@@ -101,6 +100,27 @@ namespace Order.API.Tests
 			//Then
 			Assert.Equal("NotFound", response.StatusCode.ToString());
 		}
+
+		[Fact]
+		public async Task GivenAnAPI_WhenPuttingItemData_ThenItemIsUpdatedOnBackendAsync()
+		{
+			//Given
+			var itemDTOWithoutID = new ItemDTOWithoutID("test", "test", 0.0, 0);
+			var username = Database.Users[1].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+
+			//When
+			var content = JsonConvert.SerializeObject(itemDTOWithoutID);
+			var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+			var response = await _client.PutAsync("/api/items/0", stringContent);
+
+			//Then
+			Assert.True(response.IsSuccessStatusCode);
+		}
+
 
 	}
 }

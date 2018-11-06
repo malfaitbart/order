@@ -56,5 +56,20 @@ namespace Order.Services
 		{
 			return Database.Orders.FirstOrDefault(order => order.ID == id);
 		}
+
+		public Tuple<List<Domain.Orders.Order>, double> GetOrdersReport(int customerID)
+		{
+			var ordersList = new List<Domain.Orders.Order>();
+			double totalPrice = 0;
+			foreach (var order in Database.Orders)
+			{
+				if (order.CustomerID == customerID)
+				{
+					ordersList.Add(order);
+					totalPrice += order.TotalPrice;
+				}
+			}
+			return new Tuple<List<Domain.Orders.Order>, double>(ordersList, totalPrice);
+		}
 	}
 }

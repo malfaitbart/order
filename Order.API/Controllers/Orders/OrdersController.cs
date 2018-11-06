@@ -56,6 +56,16 @@ namespace Order.API.Controllers.Orders
 			return Ok(orderMapper.ToDTO(order));
 		}
 
+		[Authorize(Roles = "Customer, Admin")]
+		[HttpGet]
+		[Route("OrderReport")]
+		public ActionResult<OrderReportDTO> GetOrderReportForCurrentUser()
+		{
+			var result = orderService.GetOrdersReport(GetUserIDFromHeader());
+
+			return orderMapper.ToOrderReportDTO(result);
+		}
+
 		[Authorize(Roles ="Customer, Admin")]
 		[HttpPost]
 		public ActionResult CreateOrder([FromBody]List<IncomingOrderItemGroupDTO> incomingItemGroupDTO)

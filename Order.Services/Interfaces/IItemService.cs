@@ -10,5 +10,6 @@ namespace Order.Services.Interfaces
 		List<Item> GetAll();
 		Item GetByID(int id);
 		void AddItem(Item item);
+		void UpdateItem(int itemID, string itemName, string itemDescription, double itemPrice, int itemAmount);
 	}
 }
