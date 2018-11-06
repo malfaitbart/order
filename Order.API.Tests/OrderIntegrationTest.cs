@@ -70,12 +70,12 @@ namespace Order.API.Tests
 
 		}
 		[Fact]
-		public async Task GivenAnAPI_WhenPostingItemData_ThenItemIsCreatedOnBackendAsync()
+		public async Task GivenAnAPI_WhenPostingOrderData_ThenOrderIsCreatedOnBackendAsync()
 		{
 			//Given
 			var dtocreate1 = new IncomingOrderItemGroupDTO(0,1);
 			var dtocreate2 = new IncomingOrderItemGroupDTO(1, 1);
-			List<IncomingOrderItemGroupDTO> orderDTO_Creates = new List<IncomingOrderItemGroupDTO>() { dtocreate1, dtocreate2 };
+			List<IncomingOrderItemGroupDTO> IncomingOrderItemGroupsDTO = new List<IncomingOrderItemGroupDTO>() { dtocreate1, dtocreate2 };
 
 			var username = Database.Users[0].Email;
 			var password = "";
@@ -83,7 +83,7 @@ namespace Order.API.Tests
 			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
-			var content = JsonConvert.SerializeObject(orderDTO_Creates);
+			var content = JsonConvert.SerializeObject(IncomingOrderItemGroupsDTO);
 			var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
 
 			var response = await _client.PostAsync("/api/orders", stringContent);
@@ -109,6 +109,38 @@ namespace Order.API.Tests
 			//Then
 			Assert.True(response.IsSuccessStatusCode);
 
+		}
+		[Fact]
+		public async Task GivenAnAPI_WhenPostingReorder_ThenOrderIsReCreatedOnBackendAsync()
+		{
+			//Given
+
+			var username = Database.Users[0].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+
+			//When
+			var response = await _client.PostAsync("/api/orders/0", new StringContent(""));
+
+			//Then
+			Assert.True(response.IsSuccessStatusCode);
+		}
+		[Fact]
+		public async Task GivenAnAPI_WhenPostingReorderWithWrongUser_ThenGetBadRequest()
+		{
+			//Given
+
+			var username = Database.Users[1].Email;
+			var password = "";
+
+			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+
+			//When
+			var response = await _client.PostAsync("/api/orders/0", new StringContent(""));
+
+			//Then
+			Assert.Equal("BadRequest", response.StatusCode.ToString());
 		}
 
 	}

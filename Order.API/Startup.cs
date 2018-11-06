@@ -74,7 +74,6 @@ namespace Order.API
 				c.MaxDisplayedTags(5);
 				c.ShowExtensions();
 				c.EnableValidator();
-				c.SupportedSubmitMethods(SubmitMethod.Get, SubmitMethod.Head);
 			});
 
 			if (env.IsDevelopment())

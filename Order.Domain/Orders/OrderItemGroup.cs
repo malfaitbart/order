@@ -8,7 +8,7 @@ namespace Order.Domain.Orders
 		public int ItemID { get; private set; }
 		public string ItemName { get; private set; }
 		public double ItemPrice { get; private set; }
-		public int Amount { get; private set; }
+		public int ItemAmount { get; private set; }
 		public DateTime ShippingDate { get; private set; }
 		public double ItemGroupTotalPrice { get => CalculateTotalItemGroupPrice(); }
 
@@ -17,7 +17,7 @@ namespace Order.Domain.Orders
 			ItemID = item.ID;
 			ItemName = item.Name;
 			ItemPrice = item.Price;
-			Amount = amount;
+			ItemAmount = amount;
 			ShippingDate = CheckStockToDecideShippIngDate(item, amount);
 		}
 
@@ -32,7 +32,7 @@ namespace Order.Domain.Orders
 
 		private double CalculateTotalItemGroupPrice()
 		{
-			return ItemPrice * Amount;
+			return ItemPrice * ItemAmount;
 		}
 	}
 }

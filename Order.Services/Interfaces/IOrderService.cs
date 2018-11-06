@@ -12,5 +12,7 @@ namespace Order.Services.Interfaces
 		int CreateOrder(int customerID, List<IncomingOrderItemGroup> incomingOrderItems);
 		Domain.Orders.Order GetByID(int id);
 		Tuple<List<Domain.Orders.Order>, double> GetOrdersReport(int customerID);
+		int ReOrder(int orderID, int customerID);
+		List<Domain.Orders.Order> GetOrdersWithItemGroupsShipping(uint todayPlusShippingday);
 	}
 }

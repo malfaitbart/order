@@ -23,7 +23,7 @@ namespace Order.Services
 
 		public Item GetByID(int id)
 		{
-			return Database.Items.FirstOrDefault(item => item.ID == id);
+			return Database.Items.FirstOrDefault(item => item.ID == id && item.Status == 1);
 		}
 
 		public void UpdateItem(int itemID, string itemName, string itemDescription, double itemPrice, int itemAmount)

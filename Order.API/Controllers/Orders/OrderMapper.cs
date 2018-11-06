@@ -18,7 +18,7 @@ namespace Order.API.Controllers.Orders
 
 		public OrderDTO ToDTO(Domain.Orders.Order order)
 		{
-			return new OrderDTO(order.ID, orderItemMapper.ToItemGroupDTO(order.ItemGroup), order.TotalPrice, order.CustomerID); ;
+			return new OrderDTO(order.ID, orderItemMapper.ToItemGroupDTO(order.ItemGroups), order.TotalPrice, order.CustomerID); ;
 		}
 
 		public List<OrderDTO> ToDTOList(List<Domain.Orders.Order> orders)
@@ -33,10 +33,11 @@ namespace Order.API.Controllers.Orders
 
 		public  OrderReportDTO ToOrderReportDTO(Tuple<List<Domain.Orders.Order>, double> result)
 		{
-			List<OrderDTO> orderDTOs = ToDTOList(result.Item1);
+			(var item, var price) = result;
+			List<OrderDTO> orderDTOs = ToDTOList(item);
 
 
-			var reportDTO = new OrderReportDTO(orderDTOs, result.Item2);
+			var reportDTO = new OrderReportDTO(orderDTOs, price);
 			return reportDTO;
 		}
 	}

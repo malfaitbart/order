@@ -6,7 +6,7 @@ namespace Order.Domain.Orders
 	public class Order
 	{
 		public int ID { get; private set; }
-		public List<OrderItemGroup> ItemGroup { get; private set; }
+		public List<OrderItemGroup> ItemGroups { get; private set; }
 		public double TotalPrice { get => CalculateTotalPrice(); }
 		public int CustomerID { get; private set; }
 
@@ -15,7 +15,7 @@ namespace Order.Domain.Orders
 		public Order(List<OrderItemGroup> itemGroup, int customerID)
 		{
 			ID = CreateID;
-			ItemGroup = itemGroup;
+			ItemGroups = itemGroup;
 			CustomerID = customerID;
 
 			CreateID++;
@@ -24,7 +24,7 @@ namespace Order.Domain.Orders
 		private double CalculateTotalPrice()
 		{
 			double totalPrice = 0;
-			foreach (var item in ItemGroup)
+			foreach (var item in ItemGroups)
 			{
 				totalPrice += item.ItemGroupTotalPrice;
 			}

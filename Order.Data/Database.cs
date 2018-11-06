@@ -35,14 +35,14 @@ namespace Order.Data
 		public static List<Item> Items = new List<Item>()
 		{
 			new Item("Wit brood", "Wit melkbrood", 1.5, 10, 1),
-			new Item("Bruin brood", "Bruin brood met granen", 1.6, 7, 1)
+			new Item("Bruin brood", "Bruin brood met granen", 1.6, 7, 1),
+			new Item("Nutella", "smeerpasta met chocolade", 2.0, 25, 1),
+			new Item("Melk", "Pack van 6x halve liter", 1.8, 3, 1)
 		};
 
 		public static List<Domain.Orders.Order> Orders = new List<Domain.Orders.Order>()
 		{
 			new Order.Domain.Orders.Order(new List<OrderItemGroup>(){ new OrderItemGroup(Items[0], 3), new OrderItemGroup(Items[1], 3) }, 0)
 		};
-
-		//public static List<OrderItem> OrderItems = new List<OrderItem>();
 	}
 }

@@ -2,7 +2,6 @@
 using Order.Domain.Items;
 using Order.Domain.Orders;
 using Order.Domain.Orders.Exceptions;
-using Order.Domain.Users;
 using Order.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -36,9 +35,9 @@ namespace Order.Services
 
 		private void CheckIfItemExistsInDatabase(IncomingOrderItemGroup item, Item itemtobeordered)
 		{
-			if(itemtobeordered == null)
+			if (itemtobeordered == null)
 			{
-				throw new OrderException($"The item with id {item.ItemID} does not exist.");
+				throw new OrderException($"The item with id {item.ItemID} does not exist. Order is cancelled.");
 			}
 		}
 
@@ -70,6 +69,40 @@ namespace Order.Services
 				}
 			}
 			return new Tuple<List<Domain.Orders.Order>, double>(ordersList, totalPrice);
+		}
+
+		public int ReOrder(int orderID, int customerID)
+		{
+			var originalOrder = Database.Orders.FirstOrDefault(find => find.ID == orderID);
+			if (originalOrder == null)
+			{
+				throw new OrderException("OrderID does not exist. Reorder is cancelled.");
+			}
+			if (originalOrder.CustomerID != customerID)
+			{
+				throw new OrderException("This order can not be reordered by you. Reorder is cancelled.");
+			}
+			var itemGroups = new List<IncomingOrderItemGroup>();
+			foreach (var itemgroup in originalOrder.ItemGroups)
+			{
+				itemGroups.Add(new IncomingOrderItemGroup(itemgroup.ItemID, itemgroup.ItemAmount));
+			}
+			return CreateOrder(customerID, itemGroups);
+
+		}
+
+		public List<Domain.Orders.Order> GetOrdersWithItemGroupsShipping(uint todayPlusShippingday)
+		{
+			var orderList = new List<Domain.Orders.Order>();
+			foreach (var order in Database.Orders)
+			{
+				var itemgroup = order.ItemGroups.Any(find => find.ShippingDate == DateTime.Now.Date.AddDays(todayPlusShippingday));
+				if (itemgroup)
+				{
+					orderList.Add(order);
+				}
+			}
+			return orderList;
 		}
 	}
 }

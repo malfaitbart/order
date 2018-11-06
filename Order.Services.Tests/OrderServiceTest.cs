@@ -49,7 +49,7 @@ namespace Order.Services.Tests
 
 			//Then
 			var exception = Assert.Throws<OrderException>(act);
-			Assert.Equal($"The item with id -1 does not exist.", exception.Message);
+			Assert.Equal($"The item with id -1 does not exist. Order is cancelled.", exception.Message);
 		}
 		[Fact]
 		public void GivenAnOrderService_WhenGetAll_ThenGetListOdOrders()
@@ -121,5 +121,45 @@ namespace Order.Services.Tests
 			//Then
 			Assert.IsType<List<Domain.Orders.Order>>(actual.Item1);
 		}
+		[Fact]
+		public void GivenPreviousOrders_WhenReorder_ThenCreateOrderWithSameItemGroupsAsOriginalOrderButWithCurrentData()
+		{
+			//Given
+			var order = Database.Orders[0];
+			ItemService itemService = new ItemService();
+			OrderService orderService = new OrderService(itemService);
+
+			//When
+			var reorderid = orderService.ReOrder(order.ID, order.CustomerID);
+			//Then
+			Assert.True(reorderid > 0);
+		}
+		[Fact]
+		public void GivenPreviousOrders_WhenReorderAnOrderFromOtherUser_ThenGetException()
+		{
+			//Given
+			var order = Database.Orders[0];
+			ItemService itemService = new ItemService();
+			OrderService orderService = new OrderService(itemService);
+
+			//When
+			Action act = () => orderService.ReOrder(order.ID, 7);
+			//Then
+			var exception = Assert.Throws<OrderException>(act);
+			Assert.Equal("This order can not be reordered by you. Reorder is cancelled.", exception.Message);
+		}
+		[Fact]
+		public void GivenOrders_WhenGetItemsShippingToday_ThenGetOrdersWithItemGroupsThatShipToday()
+		{
+			//Given
+			ItemService itemService = new ItemService();
+			OrderService orderService = new OrderService(itemService);
+
+			//When
+			var ordersWithItemGroupsShippingToday = orderService.GetOrdersWithItemGroupsShipping(0);
+			//Then
+			Assert.IsType<List<Domain.Orders.Order>>(ordersWithItemGroupsShippingToday);
+		}
+
 	}
 }
