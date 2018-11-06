@@ -20,13 +20,13 @@ namespace Order.Services.Tests
 			ItemService itemService = new ItemService();
 			OrderService orderService = new OrderService(itemService);
 			
-			List<Order_Create> orderItems = new List<Order_Create>
+			List<IncomingOrderItemGroup> itemGroup= new List<IncomingOrderItemGroup>
 			{
-				new Order_Create(Database.Items[0].ID, 1),
-				new Order_Create(Database.Items[1].ID, 2)
+				new IncomingOrderItemGroup(Database.Items[0].ID, 1),
+				new IncomingOrderItemGroup(Database.Items[1].ID, 2)
 			};
 			//When
-			var orderid = orderService.CreateOrder(Database.Users[0].ID, orderItems);
+			var orderid = orderService.CreateOrder(Database.Users[0].ID, itemGroup);
 
 			//Then
 			var actual = Database.Orders.FirstOrDefault(order => order.ID == orderid);
@@ -41,12 +41,12 @@ namespace Order.Services.Tests
 			OrderService orderService = new OrderService(itemService);
 
 			var user = Database.Users[0];
-			List<Order_Create> orderItems = new List<Order_Create>
+			List<IncomingOrderItemGroup> itemGroup = new List<IncomingOrderItemGroup>
 			{
-				new Order_Create(-1,2),
+				new IncomingOrderItemGroup(-1,2),
 			};
 			//When
-			Action act = () => orderService.CreateOrder(user.ID, orderItems);
+			Action act = () => orderService.CreateOrder(user.ID, itemGroup);
 
 			//Then
 			var exception = Assert.Throws<OrderException>(act);
@@ -75,12 +75,12 @@ namespace Order.Services.Tests
 
 			var user = Database.Users[0];
 
-			List<Order_Create> orderItems = new List<Order_Create>
+			List<IncomingOrderItemGroup> itemGroup = new List<IncomingOrderItemGroup>
 			{
-				new Order_Create(Database.Items[0].ID, 1),
-				new Order_Create(Database.Items[1].ID, 2)
+				new IncomingOrderItemGroup(Database.Items[0].ID, 1),
+				new IncomingOrderItemGroup(Database.Items[1].ID, 2)
 			};
-			orderService.CreateOrder(user.ID, orderItems);
+			orderService.CreateOrder(user.ID, itemGroup);
 			//When
 			var actual = orderService.GetByID(0);
 

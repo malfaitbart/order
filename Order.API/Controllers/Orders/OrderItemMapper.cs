@@ -9,30 +9,30 @@ namespace Order.API.Controllers.Orders
 {
 	public class OrderItemMapper
 	{
-		public OrderItemDTO OrderItemToOrderItemDTO(OrderItem orderItem)
+		public OrderItemGroupDTO ToOrderItemDTO(OrderItemGroup orderItem)
 		{
-			var dto = new OrderItemDTO(orderItem.ItemID, orderItem.ItemName, orderItem.ItemPrice, orderItem.Amount, orderItem.ShippingDate, orderItem.OrderID);
+			var dto = new OrderItemGroupDTO(orderItem.ItemID, orderItem.ItemName, orderItem.ItemPrice, orderItem.Amount, orderItem.ShippingDate, orderItem.OrderID);
 			return dto;
 		} 
 
-		public List<OrderItemDTO> OrderItemListToOrderItemDTOList(List<OrderItem> orderItems)
+		public List<OrderItemGroupDTO> ToItemGroupDTO(List<OrderItemGroup> orderItems)
 		{
-			var dtoList = new List<OrderItemDTO>();
+			var dtoList = new List<OrderItemGroupDTO>();
 			foreach (var item in orderItems)
 			{
-				dtoList.Add(OrderItemToOrderItemDTO(item));
+				dtoList.Add(ToOrderItemDTO(item));
 			}
 			return dtoList;
 		}
 
-		public List<Order_Create> OrderItemDTOListToOrderItemList(List<OrderDTO_Create> orderDTO_Create)
+		public List<IncomingOrderItemGroup> ToItemGroup(List<IncomingOrderItemGroupDTO> itemGroupsDTO)
 		{
-			var orderitemlist = new List<Order_Create>();
-			foreach (var orderdto_create in orderDTO_Create)
+			var itemGroup = new List<IncomingOrderItemGroup>();
+			foreach (var incomingOrderItem in itemGroupsDTO)
 			{
-				orderitemlist.Add(new Order_Create(orderdto_create.ItemID, orderdto_create.ItemAmount));
+				itemGroup.Add(new IncomingOrderItemGroup(incomingOrderItem.ItemID, incomingOrderItem.ItemAmount));
 			}
-			return orderitemlist;
+			return itemGroup;
 		}
 	}
 }

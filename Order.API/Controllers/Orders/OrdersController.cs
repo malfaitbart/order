@@ -41,7 +41,7 @@ namespace Order.API.Controllers.Orders
 		public ActionResult<List<OrderDTO>> GetAll()
 		{
 			var orderList = orderService.GetAll();
-			return Ok(orderMapper.orderListToOrderDTOList(orderList));
+			return Ok(orderMapper.ToDTOList(orderList));
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -53,33 +53,23 @@ namespace Order.API.Controllers.Orders
 			{
 				return NotFound();
 			}
-			return Ok(orderMapper.OrderToOrderDTO(order));
+			return Ok(orderMapper.ToDTO(order));
 		}
 
 		[Authorize(Roles ="Customer, Admin")]
 		[HttpPost]
-		public ActionResult CreateOrder([FromBody]List<OrderDTO_Create> orderDTO_Create)
+		public ActionResult CreateOrder([FromBody]List<IncomingOrderItemGroupDTO> incomingItemGroupDTO)
 		{
-			string username = GetUserNameFromHeader();
-
-			var orderitemlist = orderItemMapper.OrderItemDTOListToOrderItemList(orderDTO_Create);
-			//foreach (var orderdtocreate in orderDTO_Create)
-			//{
-			//	var itemtobeordered = itemService.GetByID(orderdtocreate.ItemID);
-			//	if (itemtobeordered == null)
-			//	{
-			//		var errorid = Guid.NewGuid();
-			//		logger.LogError(errorid + $" The requested itemID {orderdtocreate.ItemID} does not exist. Order is cancelled.");
-			//		return BadRequest(errorid + $" The requested itemID {orderdtocreate.ItemID} does not exist. Order is cancelled.");
-			//	}
-			//	orderitemlist.Add(new OrderItem(itemtobeordered, orderdtocreate.ItemAmount));
-			//}
+			var incomingItemGroup = orderItemMapper.ToItemGroup(incomingItemGroupDTO);
 
 			try
 			{
-			var createdOrder = orderService.CreateOrder(userService.GetUserID(username), orderitemlist);
+			var createdOrderID = orderService
+					.CreateOrder(
+						GetUserIDFromHeader(), 
+						incomingItemGroup);
 
-			return CreatedAtRoute("GetOrder", new { id = createdOrder}, orderMapper.OrderToOrderDTO(orderService.GetByID(createdOrder)));
+			return CreatedAtRoute("GetOrder", new { id = createdOrderID}, orderMapper.ToDTO(orderService.GetByID(createdOrderID)));
 			}
 			catch (Exception ex)
 			{
@@ -87,17 +77,16 @@ namespace Order.API.Controllers.Orders
 				logger.LogError(errorid + " " + ex.Message);
 				return BadRequest(errorid + " " + ex.Message);
 			}
-
-
 		}
 
-		private string GetUserNameFromHeader()
+		private int GetUserIDFromHeader() //naar auth helper
 		{
 			var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
 			var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
 			var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':');
 			var username = credentials[0];
-			return username;
+			var customerID = userService.GetUserID(username);
+			return customerID;
 		}
 	}
 }

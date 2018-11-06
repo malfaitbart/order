@@ -73,9 +73,9 @@ namespace Order.API.Tests
 		public async Task GivenAnAPI_WhenPostingItemData_ThenItemIsCreatedOnBackendAsync()
 		{
 			//Given
-			var dtocreate1 = new OrderDTO_Create(0,1);
-			var dtocreate2 = new OrderDTO_Create(1, 1);
-			List<OrderDTO_Create> orderDTO_Creates = new List<OrderDTO_Create>() { dtocreate1, dtocreate2 };
+			var dtocreate1 = new IncomingOrderItemGroupDTO(0,1);
+			var dtocreate2 = new IncomingOrderItemGroupDTO(1, 1);
+			List<IncomingOrderItemGroupDTO> orderDTO_Creates = new List<IncomingOrderItemGroupDTO>() { dtocreate1, dtocreate2 };
 
 			var username = Database.Users[0].Email;
 			var password = "";

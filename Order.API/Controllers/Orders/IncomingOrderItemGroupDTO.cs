@@ -1,11 +1,11 @@
 ﻿namespace Order.API.Controllers.Orders
 {
-	public class OrderDTO_Create
+	public class IncomingOrderItemGroupDTO
 	{
 		public int ItemID{ get; set; }
 		public int ItemAmount { get; set; }
 
-		public OrderDTO_Create(int itemID, int itemAmount)
+		public IncomingOrderItemGroupDTO(int itemID, int itemAmount)
 		{
 			this.ItemID = itemID;
 			this.ItemAmount = itemAmount;

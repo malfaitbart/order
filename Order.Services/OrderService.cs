@@ -19,44 +19,26 @@ namespace Order.Services
 			this.itemService = itemService;
 		}
 
-		public int CreateOrder(int userID, List<Order_Create> orderCreate)
+		public int CreateOrder(int customerID, List<IncomingOrderItemGroup> incomingOrderItems)
 		{
-			double totalPrice = 0;
-			List<OrderItem> orderItemsList = new List<OrderItem>();
+			var itemGroup = new List<OrderItemGroup>();
 
-			foreach (var orderdtocreate in orderCreate)
+			foreach (var item in incomingOrderItems)
 			{
-				var itemtobeordered = itemService.GetByID(orderdtocreate.ItemID);
-
-				CheckIfItemExistsInDatabase(orderdtocreate, itemtobeordered);
-
-				totalPrice += itemtobeordered.Price * orderdtocreate.ItemAmount;
-
-				orderItemsList.Add(new OrderItem(itemtobeordered, orderdtocreate.ItemAmount));
+				var itemtobeordered = itemService.GetByID(item.ItemID);
+				CheckIfItemExistsInDatabase(item, itemtobeordered);
+				itemGroup.Add(new OrderItemGroup(itemtobeordered, item.ItemAmount));
 			}
-
-			Domain.Orders.Order order = new Domain.Orders.Order(totalPrice, userID);
+			Domain.Orders.Order order = new Domain.Orders.Order(itemGroup, customerID);
 			Database.Orders.Add(order);
-
-			SetOrderIDOnTheOrderedItemsAndStoreInDB(orderItemsList, order);
-
 			return order.ID;
 		}
 
-		private static void SetOrderIDOnTheOrderedItemsAndStoreInDB(List<OrderItem> orderItemsList, Domain.Orders.Order order)
+		private void CheckIfItemExistsInDatabase(IncomingOrderItemGroup item, Item itemtobeordered)
 		{
-			foreach (var orderitem in orderItemsList)
+			if(itemtobeordered == null)
 			{
-				orderitem.SetOrderID(order.ID);
-				Database.OrderItems.Add(orderitem);
-			}
-		}
-
-		private static void CheckIfItemExistsInDatabase(Order_Create orderdtocreate, Item itemtobeordered)
-		{
-			if (itemtobeordered == null)
-			{
-				throw new OrderException($"The item with id {orderdtocreate.ItemID} does not exist.");
+				throw new OrderException($"The item with id {item.ItemID} does not exist.");
 			}
 		}
 

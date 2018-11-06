@@ -3,7 +3,7 @@ using Order.Domain.Items;
 
 namespace Order.Domain.Orders
 {
-	public class OrderItem
+	public class OrderItemGroup
 	{
 		public int ItemID { get; private set; }
 		public string ItemName { get; private set; }
@@ -12,7 +12,7 @@ namespace Order.Domain.Orders
 		public DateTime ShippingDate { get; private set; }
 		public int OrderID { get; private set; }
 
-		public OrderItem(Item item, int amount)
+		public OrderItemGroup(Item item, int amount)
 		{
 			ItemID = item.ID;
 			ItemName = item.Name;

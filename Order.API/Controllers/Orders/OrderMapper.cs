@@ -14,26 +14,19 @@ namespace Order.API.Controllers.Orders
 			this.orderItemMapper = orderItemMapper;
 		}
 
-		public OrderDTO OrderToOrderDTO(Domain.Orders.Order order)
+		public OrderDTO ToDTO(Domain.Orders.Order order)
 		{
-			var OrderItemList = new List<OrderItem>(Database.OrderItems.Where(item => item.OrderID == order.ID));
-
-			var dto = new OrderDTO(order.ID, orderItemMapper.OrderItemListToOrderItemDTOList(OrderItemList), order.TotalPrice, order.CustomerID);
-			return dto;
+			return new OrderDTO(order.ID, orderItemMapper.ToItemGroupDTO(order.ItemGroup), order.TotalPrice, order.CustomerID); ;
 		}
 
-		public List<OrderDTO> orderListToOrderDTOList(List<Domain.Orders.Order> orders)
+		public List<OrderDTO> ToDTOList(List<Domain.Orders.Order> orders)
 		{
 			var dtoList = new List<OrderDTO>();
 			foreach (var order in orders)
 			{
-				dtoList.Add(OrderToOrderDTO(order));
+				dtoList.Add(ToDTO(order));
 			}
 			return dtoList;
 		}
-
-
-
-
 	}
 }

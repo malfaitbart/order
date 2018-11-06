@@ -9,7 +9,7 @@ namespace Order.Services.Interfaces
 	public interface IOrderService
 	{
 		List<Domain.Orders.Order> GetAll();
-		int CreateOrder(int userID, List<Order_Create> orderItems);
+		int CreateOrder(int customerID, List<IncomingOrderItemGroup> incomingOrderItems);
 		Domain.Orders.Order GetByID(int id);
 	}
 }

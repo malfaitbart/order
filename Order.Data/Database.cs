@@ -13,16 +13,19 @@ namespace Order.Data
 				{1, "Customer"},
 				{2, "Admin" }
 			};
+
 		public static Dictionary<int, string> UserStatus = new Dictionary<int, string>()
 			{
 				{1, "Active" },
 				{2, "Disabled" }
 			};
+
 		public static Dictionary<int, string> ItemStatus = new Dictionary<int, string>()
 			{
 				{1, "Active" },
 				{2, "Non-Active" }
 			};
+
 		public static List<User> Users = new List<User>()
 			{
 				new User("Bart", "Malfait", "malfaitbart@gmail.com", "0478513065", new Address("Minister Alfred De Taeyestraat", "25", "8550", "Zwevegem")),
@@ -31,11 +34,15 @@ namespace Order.Data
 
 		public static List<Item> Items = new List<Item>()
 		{
-			new Item("Wit brood", "Wit melkbrood", 1.5, 5, 1),
-			new Item("Bruin brood", "Bruin brood met granen", 1.6, 3, 1)
+			new Item("Wit brood", "Wit melkbrood", 1.5, 10, 1),
+			new Item("Bruin brood", "Bruin brood met granen", 1.6, 7, 1)
 		};
-		public static List<Domain.Orders.Order> Orders = new List<Domain.Orders.Order>();
 
-		public static List<OrderItem> OrderItems = new List<OrderItem>();
+		public static List<Domain.Orders.Order> Orders = new List<Domain.Orders.Order>()
+		{
+			new Order.Domain.Orders.Order(new List<OrderItemGroup>(){ new OrderItemGroup(Items[0], 3), new OrderItemGroup(Items[1], 3) }, 0)
+		};
+
+		//public static List<OrderItem> OrderItems = new List<OrderItem>();
 	}
 }
