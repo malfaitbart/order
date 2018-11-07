@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Order.Domain.Users;
 using Order.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 
 namespace Order.API.Controllers.Users
@@ -44,20 +42,9 @@ namespace Order.API.Controllers.Users
 		[HttpPost]
 		public ActionResult<UserDTO> AddCustomer([FromBody]UserDTO_Register userToRegister)
 		{
-			try
-			{
-				var user = userMapper.UserDTOToUser(userToRegister);
-				userService.AddUser(user);
-				return CreatedAtRoute("GetUser", new { id = user.ID }, userMapper.UserToUserDTO(user));
-			}
-			catch (FormatException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
+			var user = userMapper.UserDTOToUser(userToRegister);
+			userService.AddUser(user);
+			return CreatedAtRoute("GetUser", new { id = user.ID }, userMapper.UserToUserDTO(user));
 		}
 	}
 }

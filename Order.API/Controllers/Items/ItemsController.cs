@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Order.Domain.Items.Exceptions;
 using Order.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 
 namespace Order.API.Controllers.Items
@@ -15,9 +12,9 @@ namespace Order.API.Controllers.Items
 	{
 		private readonly IItemService itemService;
 		private readonly ItemMapper itemMapper;
-		private readonly ILogger<ItemsController> logger;
+		private readonly ILoggerService logger;
 
-		public ItemsController(IItemService itemService, ItemMapper itemMapper, ILogger<ItemsController> logger)
+		public ItemsController(IItemService itemService, ItemMapper itemMapper, ILoggerService logger)
 		{
 			this.itemService = itemService;
 			this.itemMapper = itemMapper;
@@ -55,17 +52,8 @@ namespace Order.API.Controllers.Items
 		[HttpPut("{id}")]
 		public ActionResult UpdateItem(int id, [FromBody]ItemDTOWithoutID itemDTOWithoutID)
 		{
-			try
-			{
-				itemService.UpdateItem(id, itemDTOWithoutID.Name, itemDTOWithoutID.Description, itemDTOWithoutID.Price, itemDTOWithoutID.Amount);
-				return Ok(GetItemByID(id));
-			}
-			catch (ItemException ex)
-			{
-				var errorid = Guid.NewGuid();
-				logger.LogError(errorid + " " + ex.Message);
-				return BadRequest(errorid + " " + ex.Message);
-			}
+			itemService.UpdateItem(id, itemDTOWithoutID.Name, itemDTOWithoutID.Description, itemDTOWithoutID.Price, itemDTOWithoutID.Amount);
+			return Ok(GetItemByID(id));
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -75,18 +63,10 @@ namespace Order.API.Controllers.Items
 			if (indicator == null)
 			{
 				return itemMapper.toDTOFotStockResupplyList(itemService.GetAllSortedByStock());
-			} else
+			}
+			else
 			{
-				try
-				{
 				return itemMapper.toDTOFotStockResupplyList(itemService.GetAllSortedByStock(indicator));
-				}
-				catch (ItemException ex)
-				{
-					var errorid = Guid.NewGuid();
-					logger.LogError(errorid + " " + ex.Message);
-					return BadRequest(errorid + " " + ex.Message);
-				}
 			}
 		}
 	}

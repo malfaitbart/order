@@ -32,7 +32,7 @@ namespace Order.API.Controllers.Orders
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		public ActionResult<List<OrderDTO>> GetAll([FromQuery ]uint? ShippingDay)
+		public ActionResult<List<OrderDTO>> GetAll([FromQuery]uint? ShippingDay)
 		{
 			var orderList = new List<Domain.Orders.Order>();
 			if (!ShippingDay.HasValue)
@@ -74,34 +74,16 @@ namespace Order.API.Controllers.Orders
 		{
 			var incomingItemGroup = orderItemMapper.ToItemGroup(incomingItemGroupDTO);
 
-			try
-			{
-				var createdOrderID = orderService.CreateOrder(GetUserIDFromHeader(), incomingItemGroup);
-				return CreatedAtRoute("GetOrder", new { id = createdOrderID }, orderMapper.ToDTO(orderService.GetByID(createdOrderID)));
-			}
-			catch (Exception ex)
-			{
-				var errorid = Guid.NewGuid();
-				logger.LogError(errorid + " " + ex.Message);
-				return BadRequest(errorid + " " + ex.Message);
-			}
+			var createdOrderID = orderService.CreateOrder(GetUserIDFromHeader(), incomingItemGroup);
+			return CreatedAtRoute("GetOrder", new { id = createdOrderID }, orderMapper.ToDTO(orderService.GetByID(createdOrderID)));
 		}
 
 		[Authorize(Roles = "Customer, Admin")]
 		[HttpPost("ReOrder/{id}")]
 		public ActionResult ReOrder(int id)
 		{
-			try
-			{
-				var createdOrderID = orderService.ReOrder(id, GetUserIDFromHeader());
-				return CreatedAtRoute("GetOrder", new { id = createdOrderID }, orderMapper.ToDTO(orderService.GetByID(createdOrderID)));
-			}
-			catch (Exception ex)
-			{
-				var errorid = Guid.NewGuid();
-				logger.LogError(errorid + " " + ex.Message);
-				return BadRequest(errorid + " " + ex.Message);
-			}
+			var createdOrderID = orderService.ReOrder(id, GetUserIDFromHeader());
+			return CreatedAtRoute("GetOrder", new { id = createdOrderID }, orderMapper.ToDTO(orderService.GetByID(createdOrderID)));
 		}
 
 		private int GetUserIDFromHeader() //naar auth helper

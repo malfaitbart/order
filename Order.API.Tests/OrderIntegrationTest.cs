@@ -121,10 +121,10 @@ namespace Order.API.Tests
 			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
-			var response = await _client.PostAsync("/api/orders/0", new StringContent(""));
+			var response = await _client.PostAsync("/api/Orders/ReOrder/0", new StringContent(""));
 
 			//Then
-			Assert.True(response.IsSuccessStatusCode);
+			Assert.Equal("Created", response.StatusCode.ToString());
 		}
 		[Fact]
 		public async Task GivenAnAPI_WhenPostingReorderWithWrongUser_ThenGetBadRequest()
@@ -137,10 +137,10 @@ namespace Order.API.Tests
 			_client.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
 
 			//When
-			var response = await _client.PostAsync("/api/orders/0", new StringContent(""));
+			var response = await _client.PostAsync("/api/Orders/ReOrder/0", new StringContent(""));
 
 			//Then
-			Assert.Equal("BadRequest", response.StatusCode.ToString());
+			Assert.Equal("InternalServerError", response.StatusCode.ToString());
 		}
 
 	}

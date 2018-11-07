@@ -27,9 +27,12 @@ namespace Order.API
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
 			services.AddSingleton<IUserService, UserService>();
 			services.AddSingleton<IItemService, ItemService>();
 			services.AddSingleton<IOrderService, OrderService>();
+
+			services.AddSingleton<ILoggerService, LoggerService>();
 
 			services.AddSingleton<UserMapper>();
 			services.AddSingleton<ItemMapper>();
@@ -53,7 +56,7 @@ namespace Order.API
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerService logger)
 		{
 			app.UseHttpsRedirection();
 
@@ -84,6 +87,8 @@ namespace Order.API
 			{
 				app.UseHsts();
 			}
+
+			app.ConfigureExceptionHandler(logger);
 
 			app.UseMvc();
 			
